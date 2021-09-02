@@ -3,11 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"></head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+
+     <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          text-align: center;
+            width: 33%;
+        }
+
+    </style>
 </head>
 <body>
     <h1>{{ user.first_name }}</h1>
+    <table>
+        <tr>
+            <td>Book name</td>
+            <td>Code</td>
+        </tr>
+    </table>
     {% for book in books %}
-        {{ book }}
+        <table>
+            <tr>
+                <th>{{ book }}</th>
+                <th>{{ book.code }}</th>
+            </tr>
+        </table>
+
     {% endfor %}
+    {% if books%}
+        <a class="btn btn-secondary" href="{% url 'library:deliver_book' %}"><h3>Deliver</h3></a>
+    {% endif %}
 </body>
 </html>

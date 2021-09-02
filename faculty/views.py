@@ -107,17 +107,10 @@ def select_lesson(request):
     if request.method == 'POST':
         form = SelectLesson(request.POST)
         if form.is_valid():
-            nation_code = form.cleaned_data.get('nation_code')
             lessons = form.cleaned_data.get('lessons')
-            try:
-                student = Student.objects.get(nation_code=nation_code)
-                if student:
-                    for lesson in lessons:
-                        lesson = Lesson.objects.get(name=lesson)
-                        student.lessons.add(lesson)
-                    return HttpResponse('lesson added')
-            except:
-                return HttpResponse('this student or lesson does not exist in the system')
+            student = Student.objects.get(user=request.user)
+            [student.lessons.add(Lesson.objects.get(name=lesson)) for lesson in lessons]
+            return HttpResponse('lesson added')
     else:
         form = SelectLesson()
 

@@ -1,28 +1,26 @@
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
 from faculty.models import User, Student
-from library.forms import RentBook
+from library.forms import RentBook, DeliverBook
 from library.models import Book
-
-
 
 
 def rent_book(request):
     if request.method == 'POST':
         form = RentBook(request.POST)
         if form.is_valid():
+
             name = form.cleaned_data.get('name')
-            student_who_rent_this_book = Student.objects.filter(books__name=name)
-            if student_who_rent_this_book:
-                return HttpResponse('this book has rent by another student')
-            else:
+            book = Book.objects.get(name=name)
+            if not book.student_who_rent:
                 student = Student.objects.get(user=request.user)
-                book = Book.objects.get(name=name)
-                student.books.add(book)
+                book.student_who_rent = student
+                end_date_rent = form.cleaned_data.get('end_date_rent')
+                book.end_date_rent = end_date_rent
+                book.save()
                 return redirect('library:show_rent_books')
-                #return HttpResponse('book rented successfully')
+
     else:
         form = RentBook()
 
@@ -31,5 +29,21 @@ def rent_book(request):
 
 def rent_book_list(request):
     student = Student.objects.get(user=request.user)
-    books = student.books.all
+    books = Book.objects.filter(student_who_rent=student)
     return render(request, 'library/rent_books_list.html', context={'books': books, 'user': student})
+
+
+def deliver_book(request):
+    """ this view is for deliver book after ending deadline """
+    if request.method == 'POST':
+        form = DeliverBook(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get('name')
+            book = Book.objects.get(name=name)
+            book.student_who_rent = None
+            book.save()
+            return redirect('library:show_rent_books')
+    else:
+        form = DeliverBook()
+
+    return render(request, 'library/deliver_book.html', context={'form': form})

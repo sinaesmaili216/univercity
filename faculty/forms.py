@@ -24,7 +24,7 @@ class CreateStudent(forms.ModelForm):
 
 
 class SelectLesson(forms.ModelForm):
-    nation_code = forms.IntegerField()
+    #nation_code = forms.IntegerField()
 
     class Meta:
         model = Student

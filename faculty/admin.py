@@ -59,7 +59,7 @@ class MasterAdmin(admin.ModelAdmin):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ['faculty', 'first_name', 'last_name']
-    filter_horizontal = ['books']
+    #filter_horizontal = ['books']
 
 
 def change_to_close(modeladmin, request, queryset):
