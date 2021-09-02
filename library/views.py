@@ -7,6 +7,8 @@ from library.models import Book
 
 
 def rent_book(request):
+    books_can_rent = Book.objects.filter(student_who_rent=None)  # to show the user to make it easier to select
+
     if request.method == 'POST':
         form = RentBook(request.POST)
         if form.is_valid():
@@ -24,7 +26,7 @@ def rent_book(request):
     else:
         form = RentBook()
 
-    return render(request, 'library/rent_book.html', context={'form': form})
+    return render(request, 'library/rent_book.html', context={'form': form, 'books_can_rent': books_can_rent})
 
 
 def rent_book_list(request):
